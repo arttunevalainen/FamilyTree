@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import './App.css';
-import fetch from 'fetch';
+import NavbarLeft from './NavbarLeft.js';
 
+import './App.css';
+import './normalize.css';
+import './skeleton.css';
 
 class App extends Component {
 
-    componentDidMount() {
-        fetch('http://ohjelmointitehtava.protacon.fi/family_tree.json').then(response => response.json()).then(data => this.state({data: data}));
-    }
-
     render() {
         return (
-            <div className="App">
-                {this.state.data}
+            <div className="container ptc-custom u-full-width u-max-full-width">
+                <NavbarLeft></ NavbarLeft>
             </div>
         );
     }
