@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 import './normalize.css';
 import './skeleton.css';
@@ -7,35 +6,17 @@ import './skeleton.css';
 
 class NavbarLeft extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.state = { data: '' };
+        this.personlistcomponent = this.personlistcomponent.bind(this);
     }
 
-    componentDidMount() {
-        this.build();
-    }
+    renderPersonList() {
+        let personlist = this.props.data;
 
-    async build() {
-        let response = await this.getFamilyTree();
-        this.setState({data: response.data});
-        console.log(this.state.data);
-    }
-
-    getFamilyTree() {
-        let url = 'http://localhost:8081/families';
-        return axios.get(url)
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    renderPeopleList() {
-        let peoplelist = this.state.data;
-
-        if(peoplelist !== '') {
-            let list = peoplelist.map(this.peoplelistcomponent);
+        if(personlist !== '') {
+            let list = personlist.map(this.personlistcomponent);
             return (<ul>{list}</ul>);
         }
         else {
@@ -43,12 +24,16 @@ class NavbarLeft extends Component {
         }
     }
 
-    peoplelistcomponent(human) {
+    personlistcomponent(person) {
         return (
-            <li className="listitem" key={human.id}>
-                {human.firstName} {human.lastName}
+            <li className="listitem" key={person.id} onClick={(e) => this.listedClicked(person.id)}>
+                {person.firstName} {person.lastName}
             </li>
         );
+    }
+
+    listedClicked(id) {
+        this.props.chosenPerson(id);
     }
 
     render() {
@@ -61,7 +46,7 @@ class NavbarLeft extends Component {
                 </div>
                 <hr/>
                 <div className="scroll">
-                    {this.renderPeopleList()}
+                    {this.renderPersonList()}
                 </div>
             </div>
         );
