@@ -445,7 +445,7 @@ hr {
 }
 
 .ptc-right .ptc-tree-background {
-	background-image: url(./images/family_tree.png);
+	background-image: url(../images/family_tree.png);
 	background-position: center top;
 	width: 100%;
     height: 725px;

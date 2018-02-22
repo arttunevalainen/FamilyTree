@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
+import '../css/clickablelist.css';
 
-import './normalize.css';
-import './skeleton.css';
-
-
-class NavbarLeft extends Component {
+class ClickableList extends Component {
 
     constructor(props) {
         super(props);
 
         this.personlistcomponent = this.personlistcomponent.bind(this);
+        this.listedClicked = this.listedClicked.bind(this);
     }
 
     renderPersonList() {
@@ -33,24 +31,17 @@ class NavbarLeft extends Component {
     }
 
     listedClicked(id) {
-        this.props.chosenPerson(id);
+        this.props.chosenid(id);
     }
 
     render() {
-        return(
-            <div className="three columns ptc-left">
-                <div className="logo">
-                    <a href="https://www.protacon.com/" target="_new">
-                        <img src={require("./images/protacon_logo.png")} alt="logo"/>
-                    </a>
-                </div>
-                <hr/>
-                <div className="scroll">
-                    {this.renderPersonList()}
-                </div>
+        return (
+            <div className="scroll">
+                {this.renderPersonList()}
             </div>
         );
     }
+
 }
 
-export default NavbarLeft;
+export default ClickableList;

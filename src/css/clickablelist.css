@@ -1,0 +1,16 @@
+
+
+.listitem {
+    list-style-type: none;
+    padding-left: 5px;
+    margin-bottom: 2px;
+}
+
+.listitem:hover {
+    background-color: #7871b1;
+    color: white;
+    cursor: pointer;
+    padding-left: 5px;
+    border-left: solid #1b0b86 5px;
+    margin-left: 0px;
+}
