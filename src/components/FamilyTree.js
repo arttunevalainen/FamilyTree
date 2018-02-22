@@ -21,12 +21,11 @@ class FamilyTree extends Component {
         let person = this.props.data[this.props.chosenid];
         if(person !== undefined) {
             let parents = [];
-            this.getAllParents(person, parents);
-            
             let children = [];
-            this.getPersonsChildren(person, children);
-            
             let siblings = [];
+
+            this.getAllParents(person, parents);
+            this.getPersonsChildren(person, children);
             this.getSiblings(person, siblings);
             
             this.setState({ parents: parents, siblings: siblings, children: children });
@@ -55,9 +54,11 @@ class FamilyTree extends Component {
 
     getSiblings(person, list) {
         for(let i = 0; i < this.props.data.length; i++) {
-            if(this.props.data[i].father === person.father || this.props.data[i].mother === person.mother) {
-                if(this.props.data[i].id !== person.id) {
-                    list.push(this.props.data[i]);
+            if(this.props.data[i].father !== null) {
+                if(this.props.data[i].father === person.father || this.props.data[i].mother === person.mother) {
+                    if(this.props.data[i].id !== person.id) {
+                        list.push(this.props.data[i]);
+                    }
                 }
             }
         }
@@ -72,10 +73,10 @@ class FamilyTree extends Component {
 
         if(parents.length > 0) {
             let list = parents.map(this.persontreelistcomponent);
-            return (<div><ul>{list}</ul></div>);
+            return (<div className="Column"><h4>Vanhemmat:</h4><ul>{list}</ul></div>);
         }
         else {
-            return (<p>Vanhempien data puuttuu</p>);
+            return (<div></div>);
         }
     }
 
@@ -84,10 +85,10 @@ class FamilyTree extends Component {
 
         if(siblings.length > 0) {
             let list = siblings.map(this.persontreelistcomponent);
-            return (<div><ul>{list}</ul></div>);
+            return (<div className="Column"><h4>Sisaret:</h4><ul>{list}</ul></div>);
         }
         else {
-            return (<p>Sisarten data puuttuu</p>);
+            return (<div></div>);
         }
     }
 
@@ -96,10 +97,10 @@ class FamilyTree extends Component {
 
         if(children.length > 0) {
             let list = children.map(this.persontreelistcomponent);
-            return (<div><ul>{list}</ul></div>);
+            return (<div className="Column"><h4>Lapset:</h4><ul>{list}</ul></div>);
         }
         else {
-            return (<p>Lasten data puuttuu</p>);
+            return (<div></div>);
         }
     }
 
@@ -117,14 +118,11 @@ class FamilyTree extends Component {
             <div className="nine columns ptc-right">
                 <div className="ptc-tree-background">
                     {this.chosenPersonName()}
-                    <h4>Vanhemmat:</h4>
-                    {this.listParents()}
-
-                    <h4>Sisaret:</h4>
-                    {this.listSiblings()}
-
-                    <h4>Lapset:</h4>
-                    {this.listChilren()}
+                    <div className="Row">
+                        {this.listParents()}
+                        {this.listSiblings()}
+                        {this.listChilren()}
+                    </div>
                 </div>
             </div>
         );

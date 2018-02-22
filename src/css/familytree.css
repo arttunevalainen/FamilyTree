@@ -2,3 +2,18 @@
 .listedPerson {
     list-style-type: none;
 }
+
+.missingdata {
+    color:red;
+}
+
+.Row {
+    display: table;
+    margin: auto;
+    text-align: center;
+}
+
+.Column {
+    padding: 20px;
+    display: table-cell;
+}
