@@ -6,7 +6,7 @@ class FamilyTree extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { parents: [], siblings: [], children: [] };
+        this.state = { grandparents: [], parents: [], siblings: [], grandchildren: [], children: [] };
     }
 
     componentDidMount() {
@@ -20,34 +20,60 @@ class FamilyTree extends Component {
     getAllFamilyMembers() {
         let person = this.props.data[this.props.chosenid];
         if(person !== undefined) {
+            let grandparents = [];
             let parents = [];
+            let grandchildren = [];
             let children = [];
             let siblings = [];
 
-            this.getAllParents(person, parents);
-            this.getPersonsChildren(person, children);
+            this.getParents(person, parents);
+            this.getGrandParents(person, grandparents);
+            this.getChildren(person, children);
+            this.getGrandChildren(person, grandchildren);
             this.getSiblings(person, siblings);
             
-            this.setState({ parents: parents, siblings: siblings, children: children });
+            this.setState({ grandparents: grandparents, parents: parents, siblings: siblings, grandchildren: grandchildren, children: children });
         }
     }
 
-    getAllParents(person, list) {
+    getGrandParents(person, list, nofirsts = false) {
         if(person !== null) {
             if(person.father !== null && person.mother !== null) {
-                list.push(this.props.data[person.father-1]);
-                list.push(this.props.data[person.mother-1]);
-                this.getAllParents(this.props.data[person.father-1], list);
-                this.getAllParents(this.props.data[person.mother-1], list);
+                if(nofirsts) {
+                    list.push(this.props.data[person.father-1]);
+                    list.push(this.props.data[person.mother-1]);
+                }
+                this.getGrandParents(this.props.data[person.father-1], list, true);
+                this.getGrandParents(this.props.data[person.mother-1], list, true);
             }
         }
     }
 
-    getPersonsChildren(person, list) {
+    getParents(person, list) {
+        if(person.father !== null) {
+            for(let i = 0; i < this.props.data.length; i++) {
+                if(this.props.data[i].id === person.father || this.props.data[i].id === person.mother) {
+                    list.push(this.props.data[i]);
+                }
+            }
+        }
+    }
+
+    getChildren(person, list) {
+        for(let i = 0; i < this.props.data.length; i++) {
+            if(this.props.data[i].father !== null) {
+                if(this.props.data[i].father === person.id || this.props.data[i].mother === person.id) {
+                    list.push(this.props.data[i]);
+                }
+            }
+        }
+    }
+
+    getGrandChildren(person, list) {
         for(let i = 0; i < this.props.data.length; i++) {
             if(this.props.data[i].father === person.id || this.props.data[i].mother === person.id) {
                 list.push(this.props.data[i]);
-                this.getPersonsChildren(this.props.data[i], list);
+                this.getGrandChildren(this.props.data[i], list);
             }
         }
     }
@@ -68,36 +94,10 @@ class FamilyTree extends Component {
         return ( <h2>{this.props.data[this.props.chosenid].firstName} {this.props.data[this.props.chosenid].lastName}</h2> );
     }
 
-    listParents() {
-        let parents = this.state.parents;
-
-        if(parents.length > 0) {
-            let list = parents.map(this.persontreelistcomponent);
-            return (<div className="Column"><h4>Vanhemmat:</h4><ul>{list}</ul></div>);
-        }
-        else {
-            return (<div></div>);
-        }
-    }
-
-    listSiblings() {
-        let siblings = this.state.siblings;
-
-        if(siblings.length > 0) {
-            let list = siblings.map(this.persontreelistcomponent);
-            return (<div className="Column"><h4>Sisaret:</h4><ul>{list}</ul></div>);
-        }
-        else {
-            return (<div></div>);
-        }
-    }
-
-    listChilren() {
-        let children = this.state.children;
-
-        if(children.length > 0) {
-            let list = children.map(this.persontreelistcomponent);
-            return (<div className="Column"><h4>Lapset:</h4><ul>{list}</ul></div>);
+    listPersons(table, header) {
+        if(table.length > 0) {
+            let list = table.map(this.persontreelistcomponent);
+            return (<div className="Column"><h4>{header}:</h4><ul>{list}</ul></div>);
         }
         else {
             return (<div></div>);
@@ -119,9 +119,11 @@ class FamilyTree extends Component {
                 <div className="ptc-tree-background">
                     {this.chosenPersonName()}
                     <div className="Row">
-                        {this.listParents()}
-                        {this.listSiblings()}
-                        {this.listChilren()}
+                        {this.listPersons(this.state.grandparents, "Isovanhemmat")}
+                        {this.listPersons(this.state.parents, "Vanhemmat")}
+                        {this.listPersons(this.state.siblings, "Sisaret")}
+                        {this.listPersons(this.state.children, "Lapset")}
+                        {this.listPersons(this.state.grandchildren, "Lastenlapset")}
                     </div>
                 </div>
             </div>
